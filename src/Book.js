@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 
 class Book extends Component {
   render() {
-    const { style, title, authors } = this.props
+    const { title, authors } = this.props.book
+    const { width, height, url } = this.props.book.cover
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={ style }></div>
+          <div className="book-cover" style={ {width, height, backgroundImage: `url(${url})`} }></div>
           <div className="book-shelf-changer">
             <select>
               <option value="move" disabled>Move to...</option>
