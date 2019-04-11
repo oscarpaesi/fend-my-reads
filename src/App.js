@@ -1,7 +1,7 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
-import Book from './Book'
+import Shelf from './Shelf'
 
 class BooksApp extends React.Component {
   state = {
@@ -111,48 +111,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Currently Reading</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      <li>
-                        <Book book={ this.state.books[0] } />
-                      </li>
-                      <li>
-                        <Book book={ this.state.books[1] } />
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Want to Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      <li>
-                        <Book book={ this.state.books[2] } />
-                      </li>
-                      <li>
-                        <Book book={ this.state.books[3] } />
-                      </li>
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      <li>
-                        <Book book={ this.state.books[4] } />
-                      </li>
-                      <li>
-                        <Book book={ this.state.books[5] } />
-                      </li>
-                      <li>
-                        <Book book={ this.state.books[6] } />
-                      </li>
-                    </ol>
-                  </div>
-                </div>
+                <Shelf title="Currently Reading" books={[this.state.books[0], this.state.books[1]]}/>
+                <Shelf title="Want to Read" books={[this.state.books[2], this.state.books[3], this.state.books[4]]}/>
+                <Shelf title="Read" books={[this.state.books[5], this.state.books[6]]}/>
               </div>
             </div>
             <div className="open-search">
