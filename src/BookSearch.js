@@ -1,19 +1,61 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import Book from './Book'
+import * as BooksAPI from './BooksAPI'
 
 class BookSearch extends Component {
 
   state = {
-    close: false
+    mustClose: false,
+    query: '',
+    resultBooks: []
   }
 
   close = () => {
-    this.setState({close: true})
+    this.setState({ mustClose: true })
+  }
+
+  updateQuery = (query) => {
+    const { getShelfBookIsOn } = this.props
+    const currentQuery = query.trim();
+    this.setState({ query })
+    BooksAPI.search(currentQuery)
+    .then((books) => {
+      let resultBooks
+      if ("error" in books) {
+        resultBooks = []
+      } else {
+        resultBooks = books.sort((a, b) => {
+          if (a.title < b.title) return -1
+          if (a.title > b.title) return 1
+          return 0
+        })
+        resultBooks.forEach(book => {
+          const shelf = getShelfBookIsOn(book)
+          book.shelf = shelf
+        })
+      }
+      this.setState({ resultBooks: resultBooks })
+    })
+  }
+
+  clearQuery = () => {
+    this.setState({ query: ''})
+  }
+
+  getBooksInShelf(shelf) {
+    let bookIds = this.state.shelves
+      .filter(entry => entry.shelf === shelf)
+      .map(entry => entry.id)
+    return this.state.books
+      .filter(book => bookIds.includes(book.id))
+      .map(book => ({...book, shelf}))
   }
 
   render() {
-
-    return (this.state.close)
+    const { mustClose, query, resultBooks } = this.state
+    const { onBookChanged } = this.props
+    return (mustClose)
       ? <Redirect push to="/" />
       : (
       <div className="search-books">
@@ -28,12 +70,22 @@ class BookSearch extends Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type="text" placeholder="Search by title or author"/>
-
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              value={ query }
+              onChange={ (event) => this.updateQuery(event.target.value) }
+            />
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          <ol className="books-grid">
+          {resultBooks.map((book, i) => (
+            <li key={ i }>
+              <Book book={ resultBooks[i] } onBookChanged={ onBookChanged }/>
+            </li>
+          ))}
+          </ol>
         </div>
       </div>
     )
