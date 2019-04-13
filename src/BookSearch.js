@@ -19,6 +19,10 @@ class BookSearch extends Component {
     const { getShelfBookIsOn } = this.props
     const currentQuery = query.trim();
     this.setState({ query })
+    if (!currentQuery) {
+      this.setState({ resultBooks: [] })
+      return
+    }
     BooksAPI.search(currentQuery)
     .then((books) => {
       let resultBooks
