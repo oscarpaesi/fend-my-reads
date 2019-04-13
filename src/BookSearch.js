@@ -29,11 +29,17 @@ class BookSearch extends Component {
       if ("error" in books) {
         resultBooks = []
       } else {
-        resultBooks = books.sort((a, b) => {
-          if (a.title < b.title) return -1
-          if (a.title > b.title) return 1
-          return 0
-        })
+        resultBooks = books
+          .filter((book) => {
+            // Make sure the book has a title, an author and a cover image,
+            // so it can be properly displayed
+            return (book.title && book.authors && book.imageLinks)
+          })
+          .sort((a, b) => {
+            if (a.title < b.title) return -1
+            if (a.title > b.title) return 1
+            return 0
+          })
         resultBooks.forEach(book => {
           const shelf = getShelfBookIsOn(book)
           book.shelf = shelf
@@ -41,10 +47,6 @@ class BookSearch extends Component {
       }
       this.setState({ resultBooks: resultBooks })
     })
-  }
-
-  clearQuery = () => {
-    this.setState({ query: ''})
   }
 
   getBooksInShelf(shelf) {
